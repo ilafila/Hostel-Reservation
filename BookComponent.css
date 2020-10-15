@@ -1,0 +1,89 @@
+.booking-component {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.booking-component__booking-container{
+  display: flex;
+  width: 1100px;
+  height: 80%;
+  background-color: whitesmoke;
+  border-radius: 9%;
+  -webkit-border-radius: 9%;
+  -moz-border-radius: 9%;
+  -ms-border-radius: 9%;
+  -o-border-radius: 9%;
+}
+
+.booking-container__main-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 45%;
+}
+
+
+.booking-img{
+  width: 55%;
+  border-radius: 10%;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  -ms-border-radius: 10%;
+  -o-border-radius: 10%;
+}
+
+.main-container__date-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 299px;
+  height: 150px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5%;
+  -webkit-border-radius: 5%;
+  -moz-border-radius: 5%;
+  -ms-border-radius: 5%;
+  -o-border-radius: 5%;
+}
+
+.departure-container, .return-container{
+  margin-left: 10px;
+}
+
+.departure, .return{
+  border: 1px solid black;
+  border-radius: 7%;
+  width: 80px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  height: 30px;
+  margin-top: 10px;
+  margin-right: 10px;
+  -webkit-border-radius: 7%;
+  -moz-border-radius: 7%;
+  -ms-border-radius: 7%;
+  -o-border-radius: 7%;
+}
+
+.find-btn{
+  width: 50px;
+  height: 30px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  margin-top: 10px;
+  padding-top: 3px;
+}
+
+.icon-book{
+  width: 20px;
+  height: 20px;
+}
