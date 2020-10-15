@@ -11,7 +11,7 @@ const HomeComponent = {
       <div class="general-info-container">
         <h1>We can help you enjoy Saint-Petersburg</h1>
         <div class="general-info-container__location">
-          <img class="location-img" src="./Images/location.jpg">
+          <img alt="greeting image" class="location-img" src="./Images/location.jpg">
           <p class="info-text">We are located in the heart of Saint-Petersburg.So you can visit all the most popular attractions,
           walk through magestic streets and plunge into the atmosphere of small sights.You don't have to spend a lot of time for road </p>
         </div> 
@@ -40,7 +40,7 @@ const HomeComponent = {
 
       <div class="rooms-section-container">
         <div class="rooms-section-container__room-container">
-          <img class="room" src="./Images/Private room/bedroom2.png">
+          <img alt="private room image" class="room" src="./Images/Private room/bedroom2.png">
           <div class="room-info">
             <h2>Private room</h2>
             <p class="text">Are you coming solo, as a couple or with friends and you need privacy?
@@ -56,7 +56,7 @@ const HomeComponent = {
             Rooms with a large double bed and two bunk-beds with private bathroom  for 4 people by price <strong>35 euro</strong>/night
             </p>
           </div>
-          <img class="room" src="./Images/Family room/family1.png">
+          <img alt="family room image" class="room" src="./Images/Family room/family1.png">
         </div>
       </div>
 
@@ -90,7 +90,7 @@ const LogInComponent = {
   render: () => {
     return `
       <section class="login-component">
-        <img class="login-photo"src="./Images/login.jpg">
+        <img alt="login image" class="login-photo"src="./Images/login.jpg">
         <div class="login-component__login-container">
           <div class="login-container__main-part">
             <h1 class="sign-title">Sign in to book a room</h1>
@@ -119,7 +119,7 @@ const BookComponent = {
     return `
       <section class="booking-component">
         <div class="booking-component__booking-container">
-          <img class="booking-img" src="./Images/booking.jpg">
+          <img alt="booking image" class="booking-img" src="./Images/booking.jpg">
           <div class="booking-container__main-container">
             <h2>Lets enjoy your vacation!!!</h2>
             <div class="main-container__date-container">
