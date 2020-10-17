@@ -36,12 +36,13 @@
   -o-border-radius: 10%;
 }
 
-.main-container__date-container{
+.main-container{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 299px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   background-color: white;
   border: 1px solid black;
   border-radius: 5%;
@@ -49,13 +50,32 @@
   -moz-border-radius: 5%;
   -ms-border-radius: 5%;
   -o-border-radius: 5%;
+  transition: all 2s ease-in-out;
+  -webkit-transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -ms-transition: all 2s ease-in-out;
+  -o-transition: all 2s ease-in-out;
 }
 
-.departure-container, .return-container{
+.main-container__book-container, .main-container__date-container{
+  display: flex;
+  align-items: center;
+}
+
+.main-container__book-container{
+  width: 200px;
+}
+
+.room-container{
+  display: flex;
+}
+
+.departure-container, .return-container, .room-container{
   margin-left: 10px;
+
 }
 
-.departure, .return{
+.departure, .return, .room-type{
   border: 1px solid black;
   border-radius: 7%;
   width: 80px;
@@ -81,9 +101,75 @@
   -o-border-radius: 20px;
   margin-top: 10px;
   padding-top: 3px;
+  margin-left: 25px;
 }
 
 .icon-book{
   width: 20px;
   height: 20px;
+}
+
+.info-container{
+  display: flex;
+  align-items: center;
+}
+
+h4{
+  margin-right: 5px;
+}
+
+.hide{
+  display: none;
+}
+
+.modal {
+  margin-top: 20px;
+  transition: all 2s ease-out;
+  -webkit-transition: all 2s ease-out;
+  -moz-transition: all 2s ease-out;
+  -ms-transition: all 2s ease-out;
+  -o-transition: all 2s ease-out;
+}
+
+.close{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  width: 40px;
+  height: 40px;
+}
+
+.available-rooms-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  background-color: white;
+  border-radius: 10%;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  -ms-border-radius: 10%;
+  -o-border-radius: 10%;
+}
+
+.available-rooms-container h1{
+  color: black;
+}
+
+.available-rooms{
+  align-self: center;
+}
+
+.floor{
+  display: flex;
+  align-items: center;
+}
+
+.room-icon{
+  width: 50px;
+  height: 50px;
+  color: green;
 }

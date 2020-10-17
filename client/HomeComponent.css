@@ -3,6 +3,11 @@
   margin: 0;
   box-sizing: border-box;
   font-family: YS Text, Open Sans, Helvetica Neue, Arial, sans-serif;
+  transition: all 2s ease-out;
+  -webkit-transition: all 2s ease-out;
+  -moz-transition: all 2s ease-out;
+  -ms-transition: all 2s ease-out;
+  -o-transition: all 2s ease-out;
 }
 
 .home-component, .booking-section-container {
@@ -32,12 +37,14 @@
 /* General information part */
 
 .general-info-container {
+  display: flex;
+  flex-direction: column;
   background-color: black;
   height: 70%;
 }
 
 h1 {
-  max-width: 850px;
+  align-self: center;
   font-size: 40px;
   margin: 0 auto;
   padding-top: 10px;
