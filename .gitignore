@@ -1,0 +1,4 @@
+# PyCharm files and venv files
+.idea
+venv
+.venv
