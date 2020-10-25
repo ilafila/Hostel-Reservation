@@ -12,14 +12,14 @@
 
 .home-component, .booking-section-container {
   height: 100vh;
-  background-image: url("/Users/ilafilatov/Desktop/Hostel reservation/Images/start.jpg");
+  background-image: url("./Images/start.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
 
 .booking-section-container {
-  background-image: url("/Users/ilafilatov/Desktop/Hostel reservation/Images/book.png");
+  background-image: url("./Images/book.png");
 }
 
 .greeting-container {
