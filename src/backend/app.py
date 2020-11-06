@@ -90,6 +90,21 @@ def book():
             }
     :returns:
         rooms info for GET, code message for POST
+        Response for GET:
+        [
+            {
+                "room_num": <room_id>,
+                "floor": <floor>,
+                "type": <type>,
+                "price": <price>,
+                "capacity": <capacity>,
+                "available": <available>
+            },
+            {
+                ...
+            },
+            ...
+        ]
     """
     req_json = request.get_json()
     try:
