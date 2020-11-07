@@ -1,9 +1,12 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 from connection import MySQL
 import json
 
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = MySQL()
 
 
@@ -16,6 +19,7 @@ def response(response, status, mimetype='application/json'):
 
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     """
     Showing registration page and register new users
@@ -43,6 +47,7 @@ def register():
 
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     """
     Logging in user profile
@@ -72,6 +77,7 @@ def login():
 
 
 @app.route('/book', methods=['GET', 'POST'])
+@cross_origin()
 def book():
     """Booking specific room/getting rooms info
     :param:
