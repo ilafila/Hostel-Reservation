@@ -82,11 +82,9 @@ def book():
     """Booking specific room/getting rooms info
     :param:
         GET:
-            {
-                "time_in": <time_in>, - string in format "yyyy-mm-dd tt:tt"
-                "time_out": <time_out>,
-                "type": <type> - string
-            }
+            parameters: "time_in": <time_in>, - string in format "yyyy-mm-dd tt:tt"
+                        "time_out": <time_out>,
+                        "type": <type> - string
         POST:
             {
                 "user_id": <user_id>,
@@ -114,14 +112,15 @@ def book():
     """
     req_json = request.get_json()
     try:
-        time_in = req_json['time_in']
-        time_out = req_json['time_out']
+        time_in = request.args.get('time_in')
+        time_out = request.args.get('time_out')
     except KeyError:
         return response(json.dumps({"message": "Not enough data provided"}), 400)
 
     if request.method == 'GET':
         try:
-            type = req_json['type']
+
+            type = request.args.get('type')
         except KeyError:
             return response(json.dumps({"message": "Not enough data provided"}), 400)
         info = db.get_rooms_info(time_in, time_out, type)
