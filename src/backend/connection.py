@@ -3,12 +3,12 @@ from pymysql.cursors import DictCursor
 from config import MySQLDB
 
 
-class MySQL():
+class MySQL:
     def __init__(self):
-        self.connection = self._connect()
+        self._connect()
 
     def _connect(self):
-        return pymysql.connect(
+        self.connection = pymysql.connect(
             host=MySQLDB['host'],
             user=MySQLDB['user'],
             password=MySQLDB['password'],
@@ -16,8 +16,13 @@ class MySQL():
             charset='utf8mb4',
             cursorclass=DictCursor)
 
+    def _close_connection(self):
+        self.connection.close()
+
     def user_exists(self, mail):
         """Checking whether user with this mail already registered"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -32,6 +37,8 @@ class MySQL():
 
     def add_user(self, mail, password):
         """Adding user to database"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             INSERT INTO
@@ -48,6 +55,8 @@ class MySQL():
 
     def check_auth(self, mail, password):
         """Checking credentials"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -66,6 +75,8 @@ class MySQL():
 
     def check_intersec(self, time_in, time_out, room):
         """Checking time intersection while booking"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -92,6 +103,8 @@ class MySQL():
 
     def get_available_rooms(self, type):
         """Getting room_num of each available room"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -111,6 +124,8 @@ class MySQL():
 
     def get_room_info(self, room):
         """Getting specific room info"""
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -134,6 +149,8 @@ class MySQL():
         return rooms
 
     def book(self, user, room, time_in, time_out):
+        self._close_connection()
+        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             INSERT INTO
