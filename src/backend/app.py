@@ -110,23 +110,20 @@ def book():
             ...
         ]
     """
-    req_json = request.get_json()
-    try:
-        time_in = request.args.get('time_in')
-        time_out = request.args.get('time_out')
-    except KeyError:
-        return response(json.dumps({"message": "Not enough data provided"}), 400)
-
     if request.method == 'GET':
         try:
-
+            time_in = request.args.get('time_in')
+            time_out = request.args.get('time_out')
             type = request.args.get('type')
         except KeyError:
             return response(json.dumps({"message": "Not enough data provided"}), 400)
         info = db.get_rooms_info(time_in, time_out, type)
         return response(json.dumps(info), 200)
     else:
+        req_json = request.get_json()
         try:
+            time_in = req_json['time_in']
+            time_out = req_json['time_out']
             user_id = req_json['user_id']
             room_num = req_json['room_num']
         except KeyError:
