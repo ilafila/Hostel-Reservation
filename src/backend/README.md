@@ -7,7 +7,7 @@
 
 Для локального запуска требуется установленный на компьютере docker. После установки из папки backend выполнить команду:
 ```
-sudo docker build --file Dockerfile -t backend:latest .
+sudo docker build --file Dockerfile.local -t backend:latest .
 ```
 После создания образа из этой же директории выполнить:
 ```
