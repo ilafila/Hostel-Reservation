@@ -21,8 +21,12 @@ class MySQL:
 
     def user_exists(self, mail):
         """Checking whether user with this mail already registered"""
-        self._close_connection()
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
         self._connect()
+
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
@@ -37,7 +41,10 @@ class MySQL:
 
     def add_user(self, mail, password):
         """Adding user to database"""
-        self._close_connection()
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
         self._connect()
         with self.connection.cursor() as cursor:
             query = """
@@ -55,7 +62,10 @@ class MySQL:
 
     def check_auth(self, mail, password):
         """Checking credentials"""
-        self._close_connection()
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
         self._connect()
         with self.connection.cursor() as cursor:
             query = """
@@ -73,84 +83,60 @@ class MySQL:
             else:
                 return False
 
-    def check_intersec(self, time_in, time_out, room):
-        """Checking time intersection while booking"""
-        self._close_connection()
+    def get_rooms_info(self, time_in, time_out, type):
+        """Getting rooms info for room type and time"""
+        print("get_rooms_info")
+        rooms = list()
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
         self._connect()
-        with self.connection.cursor() as cursor:
-            query = """
-            SELECT 
-                COUNT(rental.room_num) AS count
-            FROM
-                rental
-            WHERE
-                rental.time_in <= %s
-                    AND rental.time_out >= %s
-                    OR rental.time_in <= %s
-                    AND rental.time_out >= %s
-                    OR rental.time_in >= %s
-                    AND rental.time_out <= %s
-                    OR rental.time_in <= %s
-                    AND rental.time_out >= %s
-            GROUP BY (rental.room_num)
-            HAVING rental.room_num = %s
-            """
-            cursor.execute(query, [time_in, time_in, time_out, time_out, time_in, time_out, time_in, time_out, str(room)])
-            try:
-                return cursor.fetchone()['count'] == 0
-            except TypeError:
-                return True
 
-    def get_available_rooms(self, type):
-        """Getting room_num of each available room"""
-        self._close_connection()
-        self._connect()
         with self.connection.cursor() as cursor:
             query = """
             SELECT 
-                room.room_num as room
+                room.room_num,
+                room.floor,
+                room.type,
+                room.price,
+                room.capacity,
+                room.available
             FROM
                 room
+                    LEFT OUTER JOIN
+                (SELECT 
+                    rental.room_num, COUNT(rental.room_num) AS count
+                FROM
+                    rental
+                WHERE
+                    rental.time_in <= %s
+                        AND rental.time_out >= %s
+                        OR rental.time_in <= %s
+                        AND rental.time_out >= %s
+                        OR rental.time_in <= %s
+                        AND rental.time_out >= %s
+                GROUP BY (rental.room_num)) AS T1 ON room.room_num = T1.room_num
             WHERE
                 room.type = %s
                     AND room.available = 1
+                    AND (T1.count IS NULL OR T1.count = 0)
+    
             """
-            rooms = list()
-
-            cursor.execute(query, type)
+            cursor.execute(query, [time_in, time_out, time_out, time_out, time_in, time_in, str(type)])
             for row in cursor:
-                rooms.append(int(row['room']))
-            return rooms
-
-    def get_room_info(self, room):
-        """Getting specific room info"""
-        self._close_connection()
-        self._connect()
-        with self.connection.cursor() as cursor:
-            query = """
-            SELECT 
-               *
-            FROM
-               room
-            WHERE
-               room.room_num = %s
-            """
-            cursor.execute(query, str(room))
-            return cursor.fetchone()
-
-    def get_rooms_info(self, time_in, time_out, type):
-        """Getting rooms info for room type and time"""
-        rooms_num = self.get_available_rooms(type)
-        rooms = list()
-        for room_num in rooms_num:
-            if self.check_intersec(time_in, time_out, room_num):
-                rooms.append(self.get_room_info(room_num))
+                print(row)
+                rooms.append(row)
 
         return rooms
 
     def book(self, user, room, time_in, time_out):
-        self._close_connection()
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
         self._connect()
+
         with self.connection.cursor() as cursor:
             query = """
             INSERT INTO
