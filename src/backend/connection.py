@@ -165,3 +165,10 @@ class MySQL:
             for row in cursor:
                 rooms.append(row)
         return rooms
+
+    def cancel_book(self, rental_id):
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
+        self._connect()
