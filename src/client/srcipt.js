@@ -93,24 +93,32 @@ const LogInComponent = {
       password: document.querySelector('.password').value,
     };
 
-    const response = await fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(logInInfo)
-    });
+    // const response = await fetch('http://localhost:5000/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(logInInfo)
+    // });
 
-    if (response.ok) {
-      const userInfo = await response.json();
-      const userId = userInfo.user_id;
-      console.log(userId);
-      localStorage.setItem('userId', userId);
-      let link = document.createElement('a');
-      link.href = '#/book';
-      link.click();
-      delete link;
-    }
+    // if (response.ok) {
+    //   const userInfo = await response.json();
+    //   const userId = userInfo.user_id;
+    //   console.log(userId);
+    //   localStorage.setItem('userId', userId);
+    //   let link = document.createElement('a');
+    //   link.href = '#/book';
+    //   link.click();
+    //   delete link;
+    // }
+    // const userInfo = await response.json();
+    // const userId = userInfo.user_id;
+    // console.log(userId);
+    // localStorage.setItem('userId', userId);
+    let link = document.createElement('a');
+    link.href = '#/book';
+    link.click();
+    delete link;
   },
 
   handleRegistration: async () => {
@@ -192,7 +200,36 @@ const BookComponent = {
     delete link;
   },
 
-  showMyRooms: () => {
+  showMyRooms: async () => {
+    const myRoomsContainer = document.querySelector('.my-rooms-container');
+    const response = await fetch('url');
+    const myRooms = await response.json();
+    myRooms.forEach((room) => {
+      BookComponent.createMyRoom(room.room_num, room.type);
+    });
+  },
+
+  createMyRoom: (number, type) => {
+    const myRoomContainer = document.createElement('div');
+    myRoomContainer.classList.add('my-room-container');
+    const img = document.createElement('img');
+    img.classList.add('booking-info-img');
+    if(type == 'private'){
+      img.setAttribute('src', './Images/Private room/bedroom2.png');
+    } else {
+      img.setAttribute('src', './Images/Family room/family1.png');
+    }
+    myRoomContainer.appendChild(img);
+    const roomInfo = document.createElement('div');
+    roomInfo.classList.add('room-info');
+    const roomNumber = document.createElement('p');
+    roomNumber.innerText = `Room number: ${number}`;
+    const roomType = document.createElement('p');
+    roomType.innerText = `Room Type: ${type}`;
+    roomInfo.appendChild(roomNumber);
+    roomInfo.appendChild(roomType);
+    myRoomContainer.appendChild(roomInfo);
+
 
   },
 
@@ -427,6 +464,8 @@ const BookComponent = {
               <button class="strong-btn booking-btn">Book</button>
             </div>
           </div>
+
+          <div class="my-rooms-container"></div>
         </div> 
       </section>
     `;
