@@ -1,6 +1,7 @@
 import pymysql
 from pymysql.cursors import DictCursor
 from config import MySQLDB
+import datetime
 
 
 class MySQL:
@@ -125,7 +126,6 @@ class MySQL:
             """
             cursor.execute(query, [time_in, time_out, time_out, time_out, time_in, time_in, str(type)])
             for row in cursor:
-                print(row)
                 rooms.append(row)
 
         return rooms
@@ -150,3 +150,18 @@ class MySQL:
             except:
                 return False
             return True
+
+    def get_user_rooms(self, user):
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
+        self._connect()
+
+        with self.connection.cursor() as cursor:
+
+
+            rooms = list()
+            for row in cursor:
+                rooms.append(row)
+        return rooms
