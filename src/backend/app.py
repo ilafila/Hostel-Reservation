@@ -135,5 +135,29 @@ def book():
             return response(json.dumps({"message": "Wrong input"}), 400)
 
 
+@app.route('/rooms/<user_id>', methods=['GET'])
+@cross_origin()
+def user_rooms(user_id):
+    """Booking specific room/getting rooms info
+    :param:
+        GET:
+            parameters: None
+    :returns:
+        [
+        {
+            "room_num": <room_id>,
+            "floor": <floor>,
+            "type": <type>,
+            "price": <price>,
+            "capacity": <capacity>,
+            "available": <available>
+        },
+        ...
+        ]"""
+
+    rooms = db.get_user_rooms(user_id)
+    return response(json.dumps(rooms), 200)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
