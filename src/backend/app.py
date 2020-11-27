@@ -76,7 +76,7 @@ def login():
             return response(json.dumps({"message": "Wrong credentials"}), 403)
 
 
-@app.route('/book', methods=['GET', 'POST'])
+@app.route('/book', methods=['GET', 'POST', 'DELETE'])
 @cross_origin()
 def book():
     """Booking specific room/getting rooms info
@@ -91,6 +91,10 @@ def book():
                 "room_num": <room_num>,
                 "time_in": <time_in>,
                 "time_out": <time_out>
+            }
+        DELETE:
+            {
+                "rental_id": <rental_id>
             }
     :returns:
         rooms info for GET, code message for POST
@@ -119,7 +123,7 @@ def book():
             return response(json.dumps({"message": "Not enough data provided"}), 400)
         info = db.get_rooms_info(time_in, time_out, type)
         return response(json.dumps(info), 200)
-    else:
+    elif request.method == 'POST':
         req_json = request.get_json()
         try:
             time_in = req_json['time_in']
@@ -133,6 +137,42 @@ def book():
             return response(json.dumps({"message": "Done"}), 201)
         else:
             return response(json.dumps({"message": "Wrong input"}), 400)
+    else:
+        req_json = request.get_json()
+        try:
+            rental_id = req_json['rental_id']
+        except KeyError:
+            return response(json.dumps({"message": "Not enough data provided"}), 400)
+
+        res = db.cancel_book(rental_id)
+        if res:
+            return response(json.dumps({"message": "Done"}), 201)
+        else:
+            return response(json.dumps({"message": "Wrong input"}), 400)
+
+
+@app.route('/rooms/<user_id>', methods=['GET'])
+@cross_origin()
+def user_rooms(user_id):
+    """Booking specific room/getting rooms info
+    :param:
+        GET:
+            parameters: None
+    :returns:
+        [
+        {
+            "room_num": <room_id>,
+            "floor": <floor>,
+            "type": <type>,
+            "price": <price>,
+            "capacity": <capacity>,
+            "available": <available>
+        },
+        ...
+        ]"""
+
+    rooms = db.get_user_rooms(user_id)
+    return response(json.dumps(rooms), 200)
 
 
 if __name__ == '__main__':
