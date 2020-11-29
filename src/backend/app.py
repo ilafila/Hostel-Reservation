@@ -196,6 +196,13 @@ def user_rooms(user_id):
 @app.route('/login/google')
 @cross_origin()
 def login_google():
+    """Logging in via google
+    :param:
+        GET:
+            parameters: None
+    :return:
+        redirection to google auth
+    """
     redirect_uri = url_for('authorize_google', _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
@@ -203,6 +210,15 @@ def login_google():
 @app.route('/authorize/google')
 @cross_origin()
 def authorize_google():
+    """Google auth
+    :param:
+        GET:
+            parameters: None
+    :return
+        {
+            "user_id": <user_id>
+        }
+    """
     token = oauth.google.authorize_access_token()  # Access token from google (needed to get user info)
     resp = oauth.google.get('userinfo')  # userinfo contains stuff u specificed in the scrope
     user_info = resp.json()
