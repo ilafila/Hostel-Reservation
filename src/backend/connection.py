@@ -167,23 +167,27 @@ class MySQL:
                 room.type,
                 room.price,
                 room.capacity,
-                room.available
+                room.available,
+                rental.time_in,
+                rental.time_out
             FROM
                 rental,
                 room
             WHERE
                 rental.room_num = room.room_num
                     AND rental.user_id = %s
-                    AND rental.time_out <= %s
+                    AND rental.time_out >= %s
             """
             time = datetime.datetime.now()
-            now = f"{time.date()} {time.hour}:{time.minute}"
+            now = f"{time.year}-{time.month}-{time.day} {time.hour}:{time.minute}"
 
             cursor.execute(query, [user, now])
             self.connection.commit()
 
             rooms = list()
             for row in cursor:
+                row['time_in'] = str(row['time_in'])
+                row['time_out'] = str(row['time_out'])
                 rooms.append(row)
         return rooms
 
