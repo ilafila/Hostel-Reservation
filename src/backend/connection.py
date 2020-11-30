@@ -186,6 +186,8 @@ class MySQL:
 
             rooms = list()
             for row in cursor:
+                row['time_in'] = str(row['time_in'])
+                row['time_out'] = str(row['time_out'])
                 rooms.append(row)
         return rooms
 
