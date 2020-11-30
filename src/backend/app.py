@@ -179,12 +179,15 @@ def user_rooms(user_id):
     :returns:
         [
         {
+            "rental_id": <rental_id>,
             "room_num": <room_id>,
             "floor": <floor>,
             "type": <type>,
             "price": <price>,
             "capacity": <capacity>,
-            "available": <available>
+            "available": <available>,
+            "time_in": <time_in>,
+            "time_out": <time_out>
         },
         ...
         ]"""
