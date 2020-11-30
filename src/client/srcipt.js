@@ -102,6 +102,7 @@ const LogInComponent = {
     });
 
     if (response.ok) {
+      routes[2] = { path: '/book', component: BookComponent };
       const userInfo = await response.json();
       const userId = userInfo.user_id;
       localStorage.setItem('userId', userId);
@@ -537,10 +538,22 @@ const BookComponent = {
 }
 
 const ErrorComponent = {
+  handleError: () => {
+    const link = document.createElement('a');
+    link.href = '#/login';
+    link.click();
+    delete link;
+  },
+
   render: () => {
     return `
-      <section class="red">
-        <h1>Error</h1>
+      <section class="error-section">
+        <div class="error-container">
+          <div class="error">
+            <h1>You must log in before going to book page!!!</h1>
+          </div>
+          <button class="strong-btn error-btn" onclick="ErrorComponent.handleError()">Log in</button>
+        </div>
       </section>
     `;
   }
@@ -549,12 +562,11 @@ const ErrorComponent = {
 const routes = [
   { path: '/', component: HomeComponent, },
   { path: '/login', component: LogInComponent, },
-  { path: '/book', component: BookComponent, },
+  { path: '/book', component: ErrorComponent, }
 ];
 
 function parseLocation() {
   return location.hash.slice(1).toLowerCase() || '/';
-
 }
 
 function findComponentByPath(path, routes) {
