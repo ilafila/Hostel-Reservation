@@ -264,7 +264,7 @@ nav {
 /* My rooms part */
 .my-rooms-container{
   height: 440px;
-  overflow: scroll;
+  overflow: auto;
   margin-top: 50px;
 
 }
