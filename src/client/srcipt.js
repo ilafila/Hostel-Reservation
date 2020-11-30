@@ -93,32 +93,23 @@ const LogInComponent = {
       password: document.querySelector('.password').value,
     };
 
-    // const response = await fetch('http://localhost:5000/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(logInInfo)
-    // });
+    const response = await fetch('https://hostel-reservation.herokuapp.com/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(logInInfo)
+    });
 
-    // if (response.ok) {
-    //   const userInfo = await response.json();
-    //   const userId = userInfo.user_id;
-    //   console.log(userId);
-    //   localStorage.setItem('userId', userId);
-    //   let link = document.createElement('a');
-    //   link.href = '#/book';
-    //   link.click();
-    //   delete link;
-    // }
-    // const userInfo = await response.json();
-    // const userId = userInfo.user_id;
-    // console.log(userId);
-    // localStorage.setItem('userId', userId);
-    let link = document.createElement('a');
-    link.href = '#/book';
-    link.click();
-    delete link;
+    if (response.ok) {
+      const userInfo = await response.json();
+      const userId = userInfo.user_id;
+      localStorage.setItem('userId', userId);
+      let link = document.createElement('a');
+      link.href = '#/book';
+      link.click();
+      delete link;
+    }
   },
 
   handleRegistration: async () => {
@@ -127,7 +118,7 @@ const LogInComponent = {
       password: document.querySelector('.password').value,
     };
 
-    const response = await fetch('http://localhost:5000/register', {
+    const response = await fetch('https://hostel-reservation.herokuapp.com/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -201,38 +192,97 @@ const BookComponent = {
   },
 
   showMyRooms: async () => {
+    const bookContainer = document.querySelector('.booking-container__main-container');
+    bookContainer.classList.add('hide');
+
     const myRoomsContainer = document.querySelector('.my-rooms-container');
+    myRoomsContainer.classList.remove('hide');
     const userId = localStorage.getItem('userId');
-    const response = await fetch(`http://localhost:5000/rooms/${userId}`);
+    console.log(userId);
+    const response = await fetch(`https://hostel-reservation.herokuapp.com/rooms/${userId}`);
     const myRooms = await response.json();
     console.log(myRooms);
     myRooms.forEach((room) => {
-      BookComponent.createMyRoom(room.room_num, room.type);
+      BookComponent.createMyRoom(room.room, room.type, room.rental_id, room.floor, room.price, room.time_in, room.time_out);
     });
   },
 
-  createMyRoom: (number, type) => {
-    const myRoomContainer = document.createElement('div');
-    myRoomContainer.classList.add('my-room-container');
-    const img = document.createElement('img');
-    img.classList.add('booking-info-img');
-    if(type == 'private'){
-      img.setAttribute('src', './Images/Private room/bedroom2.png');
-    } else {
-      img.setAttribute('src', './Images/Family room/family1.png');
+  createMyRoom: (number, type, rentalId, floor, price, timeIn, timeOut) => {
+    const roomContainers = Array.from(document.querySelectorAll('.my-room-container'));
+    const existedRoom = roomContainers.find((room) => +room.dataset.number === +number);
+    if (!existedRoom) {
+      const myRoomContainer = document.createElement('div');
+      myRoomContainer.classList.add('my-room-container');
+      myRoomContainer.dataset.number = number;
+    
+      const numberInfo = document.createElement('div');
+      numberInfo.classList.add('cancel-info');
+      const roomNumber = document.createElement('p');
+      roomNumber.innerText = `Room number: ${number}`;
+      const roomFloor = document.createElement('p');
+      roomFloor.innerText = `Floor: ${floor}`;
+      numberInfo.appendChild(roomNumber);
+      numberInfo.appendChild(roomFloor);
+      myRoomContainer.appendChild(numberInfo);
+
+      const dateInfo = document.createElement('div');
+      dateInfo.classList.add('cancel-info');
+      dateInfo.classList.add('date-info');
+      const timeInInfo = document.createElement('p');
+      timeInInfo.innerText = `Time in: ${timeIn}`;
+      const timeOutInfo = document.createElement('p');
+      timeOutInfo.innerText = `Time out: ${timeOut}`;
+      dateInfo.appendChild(timeInInfo);
+      dateInfo.appendChild(timeOutInfo);
+      myRoomContainer.appendChild(dateInfo);
+
+      const priceAndTypeInfo = document.createElement('div');
+      priceAndTypeInfo.classList.add('cancel-info');
+      const typeInfo = document.createElement('p');
+      typeInfo.innerText = `Type: ${type}`;
+      const priceInfo = document.createElement('p');
+      priceInfo.innerText = `Price: ${price}`;
+      priceAndTypeInfo.appendChild(typeInfo);
+      priceAndTypeInfo.appendChild(priceInfo);
+      myRoomContainer.appendChild(priceAndTypeInfo);
+
+      const image = document.querySelector('.booking-img');
+      image.classList.add('hide');
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.classList.add('strong-btn');
+      cancelBtn.innerText = 'Cancel';
+      cancelBtn.dataset.rentalId = rentalId;
+      cancelBtn.dataset.number = number;
+
+      cancelBtn.addEventListener('click', BookComponent.cancelBook);
+      myRoomContainer.appendChild(cancelBtn);
+
+      const myRoomsContainer = document.querySelector('.my-rooms-container');
+      myRoomsContainer.appendChild(myRoomContainer);
     }
-    myRoomContainer.appendChild(img);
-    const roomInfo = document.createElement('div');
-    roomInfo.classList.add('room-info');
-    const roomNumber = document.createElement('p');
-    roomNumber.innerText = `Room number: ${number}`;
-    const roomType = document.createElement('p');
-    roomType.innerText = `Room Type: ${type}`;
-    roomInfo.appendChild(roomNumber);
-    roomInfo.appendChild(roomType);
-    myRoomContainer.appendChild(roomInfo);
+  },
 
+  cancelBook: async function (event) {
+    event.target.parentElement.remove();
+    const rentalId = {
+      rental_id: event.target.dataset.rentalId,
+    };
 
+    const response = await fetch('https://hostel-reservation.herokuapp.com/book', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rentalId),
+    });
+
+    if(response.ok){
+      const icons = Array.from(document.querySelectorAll('.room-icon'));
+      const canceledRoom = icons.find((icon) => +icon.dataset.number === +event.target.dataset.number);
+      canceledRoom.style.color = 'green';
+      canceledRoom.addEventListener('click', BookComponent.showRoom);
+    }
   },
 
   showBookContainer: () => {
@@ -244,9 +294,16 @@ const BookComponent = {
 
     const bookingInfoContainer = document.querySelector('.booking-info-container');
     bookingInfoContainer.classList.remove('hide');
+
+    const myRoomsContainer = document.querySelector('.my-rooms-container');
+    myRoomsContainer.classList.add('hide');
+    myRoomsContainer.innerHTML = '';
+
+    const bookContainer = document.querySelector('.booking-container__main-container');
+    bookContainer.classList.remove('hide');
   },
 
-  showRoom: function(event) {
+  showRoom: function (event) {
     const modalRoom = document.querySelector('.modal-room-info-container');
     modalRoom.classList.add('show');
 
@@ -255,7 +312,7 @@ const BookComponent = {
     const roomType = document.querySelector('.room-type-text');
     roomType.innerText = `Type: ${event.target.dataset.type}`;
     const img = document.querySelector('.booking-info-img');
-    if(event.target.dataset.type === 'family'){
+    if (event.target.dataset.type === 'family') {
       img.setAttribute('src', './Images/Family room/family1.png');
     } else {
       img.setAttribute('src', './Images/Private room/bedroom2.png');
@@ -270,7 +327,7 @@ const BookComponent = {
     bookBtn.addEventListener('click', BookComponent.bookRoom);
   },
 
-  bookRoom: async function(event){
+  bookRoom: async function (event) {
     const roomNumber = event.target.dataset.number;
     const userId = localStorage.getItem('userId');
     const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
@@ -281,7 +338,7 @@ const BookComponent = {
       time_out: roomInfo.timeOut,
     }
 
-    const response = await fetch('http://localhost:5000/book', {
+    const response = await fetch('https://hostel-reservation.herokuapp.com/book', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -290,6 +347,10 @@ const BookComponent = {
     });
 
     if (response.ok) {
+      const icons = Array.from(document.querySelectorAll('.room-icon'));
+      const bookedRoom = icons.find((icon) => +icon.dataset.number === +bookInfo.room_num);
+      bookedRoom.style.color = 'red';
+      bookedRoom.removeEventListener('click', BookComponent.showRoom);
       const modalRoom = document.querySelector('.modal-room-info-container');
       modalRoom.classList.remove('show');
     }
@@ -308,21 +369,22 @@ const BookComponent = {
       timeOut: document.querySelector('.return').value + ` ${document.querySelector('.timeOut').value}`,
       type: document.querySelector('.room-type').value,
     }
-    const response = await fetch(`http://localhost:5000/book?time_in=${roomInfo.timeIn}&time_out=${roomInfo.timeOut}&type=${roomInfo.type}`);
+    const response = await fetch(`https://hostel-reservation.herokuapp.com/book?time_in=${roomInfo.timeIn}&time_out=${roomInfo.timeOut}&type=${roomInfo.type}`);
     if (response.ok) {
       localStorage.setItem('roomInfo', JSON.stringify(roomInfo));
       const availableRoomsJson = await response.json();
       const availableRooms = Array.from(availableRoomsJson);
+      console.log(availableRooms);
       const icons = Array.from(document.querySelectorAll('.room-icon'));
-      if(roomInfo.type === 'family'){
-        if(+icons[0].dataset.number === 1){
-          for(let i = 0; i < icons.length; i++){
+      if (roomInfo.type === 'family') {
+        if (+icons[0].dataset.number === 1) {
+          for (let i = 0; i < icons.length; i++) {
             icons[i].dataset.number = 13 + i;
           }
         }
-      } else if(roomInfo.type === 'private'){
-        if(+icons[0].dataset.number !== 1){
-          for(let i = 0; i < icons.length; i++){
+      } else if (roomInfo.type === 'private') {
+        if (+icons[0].dataset.number !== 1) {
+          for (let i = 0; i < icons.length; i++) {
             icons[i].dataset.number = i + 1;
           }
         }
@@ -330,10 +392,10 @@ const BookComponent = {
 
       icons.forEach((icon) => {
         const room = availableRooms.find((room) => room.room_num === +icon.dataset.number);
-        if(room != undefined){
+        if (room != undefined) {
           icon.style.color = 'green';
           icon.dataset.type = roomInfo.type;
-          if(roomInfo.type === 'family'){
+          if (roomInfo.type === 'family') {
             icon.dataset.price = 35;
             icon.dataset.capacity = 4;
           } else {

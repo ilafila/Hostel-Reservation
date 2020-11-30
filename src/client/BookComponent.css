@@ -263,9 +263,23 @@ nav {
 
 /* My rooms part */
 .my-rooms-container{
+  height: 440px;
+  overflow: scroll;
+  margin-top: 50px;
 
 }
 
 .my-room-container{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
+.cancel-info{
+  width: 130px;
+  margin-right: 10px;
+}
+
+.date-info {
+  width: 230px;
 }
