@@ -202,8 +202,10 @@ const BookComponent = {
 
   showMyRooms: async () => {
     const myRoomsContainer = document.querySelector('.my-rooms-container');
-    const response = await fetch('url');
+    const userId = localStorage.getItem('userId');
+    const response = await fetch(`http://localhost:5000/rooms/${userId}`);
     const myRooms = await response.json();
+    console.log(myRooms);
     myRooms.forEach((room) => {
       BookComponent.createMyRoom(room.room_num, room.type);
     });
