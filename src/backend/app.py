@@ -1,4 +1,6 @@
 from flask import Flask, request, url_for
+from flask_mail import Mail, Message
+from config import GMAIL
 from authlib.integrations.flask_client import OAuth
 from flask_cors import CORS, cross_origin
 from connection import MySQL
@@ -26,6 +28,14 @@ oauth.register(
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = MySQL()
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = GMAIL['login']
+app.config['MAIL_DEFAULT_SENDER'] = GMAIL['login']
+app.config['MAIL_PASSWORD'] = GMAIL['password']
+mail = Mail(app)
 
 
 def response(response, status, mimetype='application/json'):
@@ -152,6 +162,11 @@ def book():
             return response(json.dumps({"message": "Not enough data provided"}), 400)
         res = db.book(user_id, room_num, time_in, time_out)
         if res:
+            subject = "Booking notification"
+            message = f"You've successfully booked room number {room_num} from {time_in} till {time_out}! After" \
+                      f" coming check reception for payment and getting key. Thank you for choosing our service!"
+            msg = Message(subject, [db.get_mail_by_id(user_id)], message)
+            mail.send(msg)
             return response(json.dumps({"message": "Done"}), 201)
         else:
             return response(json.dumps({"message": "Wrong input"}), 400)
