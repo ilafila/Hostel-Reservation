@@ -61,6 +61,25 @@ class MySQL:
             except:
                 return False
 
+    def get_mail_by_id(self, user_id):
+        """Getting user email by his user_id"""
+        try:
+            self._close_connection()
+        except:
+            print("Already closed")
+        self._connect()
+        with self.connection.cursor() as cursor:
+            query = """
+            SELECT 
+                mail
+            FROM
+                user
+            WHERE
+                user_id = %s
+            """
+            cursor.execute(query, user_id)
+            return cursor.fetchone()['mail']
+
     def check_auth(self, mail, password):
         """Checking credentials"""
         try:
@@ -122,7 +141,6 @@ class MySQL:
                 room.type = %s
                     AND room.available = 1
                     AND (T1.count IS NULL OR T1.count = 0)
-    
             """
             cursor.execute(query, [time_in, time_out, time_out, time_out, time_in, time_in, str(type)])
             for row in cursor:
