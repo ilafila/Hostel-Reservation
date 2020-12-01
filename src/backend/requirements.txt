@@ -4,3 +4,4 @@ gunicorn
 flask-cors
 Authlib
 requests
+flask_mail
