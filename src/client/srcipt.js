@@ -1,6 +1,6 @@
 async function onSignIn(googleUser) {
   const profile = googleUser.getBasicProfile();
-  
+
   const email = profile.getEmail();
   const sendObj = {
     mail: email,
@@ -28,15 +28,6 @@ function signOut() {
     console.log('User signed out.');
   });
 }
-
-// const HomeComponent = {
-//   redirectToLogIn: () => {
-//     const homeComponent = document.querySelector('.home-component');
-//     const loginComponent = document.querySelector('.login-component');
-//     homeComponent.classList.add('hide');
-//     loginComponent.classList.remove('hide');
-//   },
-// }
 
 const router = {
   redirectToLogIn: () => {
@@ -107,10 +98,22 @@ const router = {
 };
 
 const LogInComponent = {
-  handleLogin: async () => {
+  handleLogin: async function () {
+    const email = document.querySelector('.email').value;
+    const password = document.querySelector('.password').value;
+    const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!email.match(mailformat)){
+      alert('Right correct Email!!!');
+      return;
+    }
+    if( !email || !password){
+      alert('Email and password must be filled out!!!');
+      return;
+    }
+
     const logInInfo = {
-      mail: document.querySelector('.email').value,
-      password: document.querySelector('.password').value,
+      mail: email,
+      password: password,
     };
 
     const response = await fetch('https://hostel-reservation.herokuapp.com/login', {
@@ -127,6 +130,7 @@ const LogInComponent = {
       localStorage.setItem('userId', userId);
       router.redirectToBook();
     }
+
   },
 
   handleRegistration: async () => {
@@ -151,43 +155,6 @@ const LogInComponent = {
 }
 
 const BookComponent = {
-  // redirectToHome: () => {
-  //   const image = document.querySelector('.booking-img');
-  //   image.classList.remove('hide');
-
-  //   const bookingText = document.querySelector('.booking-text');
-  //   bookingText.classList.add('hide');
-
-  //   const bookingInfoContainer = document.querySelector('.booking-info-container');
-  //   bookingInfoContainer.classList.add('hide');
-
-  //   const homeComponent = document.querySelector('.home-component');
-  //   const loginComponent = document.querySelector('.login-component');
-  //   const bookComponent = document.querySelector('.booking-component');
-  //   homeComponent.classList.remove('hide');
-  //   loginComponent.classList.add('hide');
-  //   bookComponent.classList.add('hide');
-
-  // },
-
-  // redirectToLogIn: () => {
-  //   const image = document.querySelector('.booking-img');
-  //   image.classList.remove('hide');
-
-  //   const bookingText = document.querySelector('.booking-text');
-  //   bookingText.classList.add('hide');
-
-  //   const bookingInfoContainer = document.querySelector('.booking-info-container');
-  //   bookingInfoContainer.classList.add('hide');
-
-  //   const homeComponent = document.querySelector('.home-component');
-  //   const loginComponent = document.querySelector('.login-component');
-  //   const bookComponent = document.querySelector('.booking-component');
-  //   homeComponent.classList.add('hide');
-  //   loginComponent.classList.remove('hide');
-  //   bookComponent.classList.add('hide');
-  // },
-
   showMyRooms: async () => {
     const bookContainer = document.querySelector('.booking-container__main-container');
     bookContainer.classList.add('hide');
@@ -209,7 +176,7 @@ const BookComponent = {
       const myRoomContainer = document.createElement('div');
       myRoomContainer.classList.add('my-room-container');
       myRoomContainer.dataset.number = number;
-    
+
       const numberInfo = document.createElement('div');
       numberInfo.classList.add('cancel-info');
       const roomNumber = document.createElement('p');
@@ -272,7 +239,7 @@ const BookComponent = {
       body: JSON.stringify(rentalId),
     });
 
-    if(response.ok){
+    if (response.ok) {
       const icons = Array.from(document.querySelectorAll('.room-icon'));
       const canceledRoom = icons.find((icon) => +icon.dataset.number === +event.target.dataset.number);
       canceledRoom.style.color = 'green';
@@ -359,10 +326,17 @@ const BookComponent = {
   handleModal: async () => {
     const modal = document.querySelector('.modal');
     modal.classList.add('hide');
+    const type = document.querySelector('.room-type').value;
+    console.log(type == 'private');
+    if(type != 'private' && type != 'family'){
+      alert('In field type right private, if you want private room, else right family!!!');
+      return;
+    }
+
     const roomInfo = {
       timeIn: document.querySelector('.departure').value + ` ${document.querySelector('.timeIn').value}`,
       timeOut: document.querySelector('.return').value + ` ${document.querySelector('.timeOut').value}`,
-      type: document.querySelector('.room-type').value,
+      type: type,
     }
     const response = await fetch(`https://hostel-reservation.herokuapp.com/book?time_in=${roomInfo.timeIn}&time_out=${roomInfo.timeOut}&type=${roomInfo.type}`);
     if (response.ok) {
