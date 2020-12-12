@@ -210,13 +210,17 @@ def login_google():
             "user_id": <user_id>
         }
     """
-    mail = request.get_json()['mail']
-    password = 'google_auth'
-    user_id = db.check_auth(mail, password)
-    if not user_id:
-        db.add_user(mail, password)
+    if request.method == 'POST':
+        try:
+            mail = request.get_json()['mail']
+        except KeyError:
+            return response(json.dumps({"message": "Not enough data provided"}), 400)
+        password = 'google_auth'
         user_id = db.check_auth(mail, password)
-    return response(json.dumps({"user_id": user_id}), 200)
+        if not user_id:
+            db.add_user(mail, password)
+            user_id = db.check_auth(mail, password)
+        return response(json.dumps({"user_id": user_id}), 200)
 
 
 if __name__ == '__main__':
