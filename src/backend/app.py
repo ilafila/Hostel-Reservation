@@ -201,7 +201,7 @@ def user_rooms(user_id):
 def login_google():
     """Logging in via google
     :param:
-        GET:
+        POST:
         {
             "mail": <mail>
         }
