@@ -1,7 +1,6 @@
-from flask import Flask, request, url_for
+from flask import Flask, request
 from flask_mail import Mail, Message
 from config import GMAIL
-from authlib.integrations.flask_client import OAuth
 from flask_cors import CORS, cross_origin
 from connection import MySQL
 import config
@@ -10,20 +9,6 @@ import json
 
 app = Flask(__name__)
 app.secret_key = config.APP_SECRET_KEY
-oauth = OAuth(app)
-oauth.register(
-    name='google',
-    client_id=config.GOOGLE_CLIENT_ID,
-    client_secret=config.GOOGLE_CLIENT_SECRET,
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-    # This is only needed if using openId to fetch user info
-    client_kwargs={'scope': 'openid email profile'},
-)
 
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -211,37 +196,21 @@ def user_rooms(user_id):
     return response(json.dumps(rooms), 200)
 
 
-@app.route('/login/google')
+@app.route('/login/google', methods=['POST'])
 @cross_origin()
 def login_google():
     """Logging in via google
     :param:
         GET:
-            parameters: None
+        {
+            "mail": <mail>
+        }
     :return:
-        redirection to google auth
-    """
-    redirect_uri = url_for('authorize_google', _external=True)
-    return oauth.google.authorize_redirect(redirect_uri)
-
-
-@app.route('/authorize/google')
-@cross_origin()
-def authorize_google():
-    """Google auth
-    :param:
-        GET:
-            parameters: None
-    :return
         {
             "user_id": <user_id>
         }
     """
-    token = oauth.google.authorize_access_token()  # Access token from google (needed to get user info)
-    resp = oauth.google.get('userinfo')  # userinfo contains stuff u specificed in the scrope
-    user_info = resp.json()
-
-    mail = user_info['email']
+    mail = request.get_json()['mail']
     password = 'google_auth'
     user_id = db.check_auth(mail, password)
     if not user_id:
