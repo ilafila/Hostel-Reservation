@@ -440,6 +440,6 @@ const ErrorComponent = {
 //   document.getElementById('app').innerHTML = component.render();
 // };
 
-window.addEventListener('hashchange', signOut);
+// window.addEventListener('hashchange', signOut);
 document.addEventListener("DOMContentLoaded", signOut);
 // window.addEventListener('load', signOut);
