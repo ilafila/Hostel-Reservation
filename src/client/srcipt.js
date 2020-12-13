@@ -331,8 +331,17 @@ const BookComponent = {
       alert('In field type write private, if you want private room, else right family!!!');
       return;
     }
+
     const departureTime = document.querySelector('.departure').value;
     const returnTime = document.querySelector('.return').value;
+    const timeIn = document.querySelector('.timeIn').value;
+    const timeOut = document.querySelector('.timeOut').value;
+
+    if(departureTime == '' && returnTime == '' && timeIn == '' && timeOut == ''){
+      alert('Please, filled out all fields!!!');
+      return;
+    }
+    
     const departureTimeArray = departureTime.split('-');
     const returnTimeArray = returnTime.split('-');
     for(let i = 0; i < departureTimeArray.length ; i++){
@@ -342,8 +351,6 @@ const BookComponent = {
       }
     }
     if (departureTime == returnTime) {
-      const timeIn = document.querySelector('.timeIn').value;
-      const timeOut = document.querySelector('.timeOut').value;
       const timeInArray = timeIn.split(':');
       const timeOutArray = timeOut.split(':');
       for (let i = 0; i < timeInArray.length; i++) {
