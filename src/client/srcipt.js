@@ -27,7 +27,6 @@ function signOut() {
   auth2.signOut().catch(function () {
     console.log('User signed out.');
   });
-  console.log('yo');
 }
 
 function loaded(){
@@ -489,5 +488,4 @@ const ErrorComponent = {
 // };
 
 // window.addEventListener('hashchange', signOut);
-// document.addEventListener("DOMContentLoaded", loaded);
-window.addEventListener('load', signOut);
+document.addEventListener("DOMContentLoaded", signOut);
