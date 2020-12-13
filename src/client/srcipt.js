@@ -337,11 +337,26 @@ const BookComponent = {
     const returnTimeArray = returnTime.split('-');
     for(let i = 0; i < departureTimeArray.length ; i++){
       if(departureTimeArray[i] > returnTimeArray[i]){
-        alert('You cannot come back before arrival! Please choose the correct departure and return time');
+        alert('You cannot come back before arrival! Please choose the correct departure and return date');
         return;
       }
-
     }
+    if (departureTime == returnTime) {
+      const timeIn = document.querySelector('.timeIn').value;
+      const timeOut = document.querySelector('.timeOut').value;
+      const timeInArray = timeIn.split(':');
+      const timeOutArray = timeOut.split(':');
+      for (let i = 0; i < timeInArray.length; i++) {
+        if (timeInArray[i] > timeOutArray[i]) {
+          alert('You cannot come back before arrival! Please choose the correct departure and return time');
+          return;
+        }
+      }
+    }
+    
+
+
+
 
 
     const roomInfo = {
