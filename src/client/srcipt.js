@@ -327,11 +327,22 @@ const BookComponent = {
     const modal = document.querySelector('.modal');
     modal.classList.add('hide');
     const type = document.querySelector('.room-type').value;
-    console.log(type == 'private');
     if(type != 'private' && type != 'family'){
-      alert('In field type right private, if you want private room, else right family!!!');
+      alert('In field type write private, if you want private room, else right family!!!');
       return;
     }
+    const departureTime = document.querySelector('.departure').value;
+    const returnTime = document.querySelector('.return').value;
+    const departureTimeArray = departureTime.split('-');
+    const returnTimeArray = returnTime.split('-');
+    for(let i = 0; i < departureTimeArray.length ; i++){
+      if(departureTimeArray[i] > returnTimeArray[i]){
+        alert('You cannot come back before arrival! Please choose the correct departure and return time');
+        return;
+      }
+
+    }
+
 
     const roomInfo = {
       timeIn: document.querySelector('.departure').value + ` ${document.querySelector('.timeIn').value}`,
@@ -429,5 +440,6 @@ const ErrorComponent = {
 //   document.getElementById('app').innerHTML = component.render();
 // };
 
-// window.addEventListener('hashchange', router);
-window.addEventListener('load', signOut);
+window.addEventListener('hashchange', signOut);
+document.addEventListener("DOMContentLoaded", signOut);
+// window.addEventListener('load', signOut);
