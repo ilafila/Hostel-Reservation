@@ -27,6 +27,19 @@ function signOut() {
   auth2.signOut().catch(function () {
     console.log('User signed out.');
   });
+  console.log('yo');
+}
+
+function loaded(){
+  const homeBtn = document.querySelector('.home-btn');
+  homeBtn.click();
+  console.log('hey');
+
+  let link = document.createElement('a');
+  link.href = '#';
+  link.onclick= "signOut();";
+  link.click();
+  delete link;
 }
 
 const router = {
@@ -106,6 +119,7 @@ const LogInComponent = {
       alert('Right correct Email!!!');
       return;
     }
+
     if( !email || !password){
       alert('Email and password must be filled out!!!');
       return;
@@ -122,7 +136,7 @@ const LogInComponent = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(logInInfo)
-    });
+    }).catch(alert("You are not registered!!!"));
 
     if (response.ok) {
       const userInfo = await response.json();
@@ -145,7 +159,7 @@ const LogInComponent = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(registrationInfo)
-    });
+    }).catch(alert("You are already registered!!!"));
 
     if (response.ok) {
       alert('You are successfully registered!');
@@ -341,13 +355,21 @@ const BookComponent = {
       alert('Please, filled out all fields!!!');
       return;
     }
-    
+
     const departureTimeArray = departureTime.split('-');
     const returnTimeArray = returnTime.split('-');
+    console.log(departureTimeArray);
+    console.log(returnTimeArray);
     for(let i = 0; i < departureTimeArray.length ; i++){
-      if(departureTimeArray[i] > returnTimeArray[i]){
-        alert('You cannot come back before arrival! Please choose the correct departure and return date');
-        return;
+      if(+departureTimeArray[i] > +returnTimeArray[i]){
+        if(+departureTimeArray[0] < +returnTimeArray[0]) {
+          break;
+        } else {
+          alert('You cannot come back before arrival! Please choose the correct departure and return date');
+          console.log(+departureTimeArray[i]);
+          console.log(+returnTimeArray[i]);
+          return;
+        }
       }
     }
     if (departureTime == returnTime) {
@@ -463,5 +485,5 @@ const ErrorComponent = {
 // };
 
 // window.addEventListener('hashchange', signOut);
-document.addEventListener("DOMContentLoaded", signOut);
-// window.addEventListener('load', signOut);
+// document.addEventListener("DOMContentLoaded", loaded);
+window.addEventListener('load', signOut);
