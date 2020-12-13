@@ -116,7 +116,7 @@ const LogInComponent = {
     const password = document.querySelector('.password').value;
     const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!email.match(mailformat)){
-      alert('Right correct Email!!!');
+      alert('Write correct Email!!!');
       return;
     }
 
@@ -346,7 +346,7 @@ const BookComponent = {
     modal.classList.add('hide');
     const type = document.querySelector('.room-type').value;
     if(type != 'private' && type != 'family'){
-      alert('In field type write private, if you want private room, else right family!!!');
+      alert('In field type write private, if you want private room, else write family!!!');
       return;
     }
 
