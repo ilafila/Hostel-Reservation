@@ -136,13 +136,15 @@ const LogInComponent = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(logInInfo)
-    }).catch(alert("You are not registered!!!"));
+    });
 
     if (response.ok) {
       const userInfo = await response.json();
       const userId = userInfo.user_id;
       localStorage.setItem('userId', userId);
       router.redirectToBook();
+    } else {
+      alert("You are not registered!!!");
     }
 
   },
@@ -159,10 +161,12 @@ const LogInComponent = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(registrationInfo)
-    }).catch(alert("You are already registered!!!"));
+    });
 
     if (response.ok) {
       alert('You are successfully registered!');
+    } else {
+      alert("You are already registered!!!");
     }
   },
 
